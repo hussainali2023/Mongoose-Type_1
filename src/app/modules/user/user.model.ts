@@ -1,8 +1,9 @@
-import { Schema, model } from "mongoose";
-import { IUser } from "./user.interface";
+import { Model, Schema, model } from "mongoose";
+import { IUser, IUserMethods } from "./user.interface";
 
+type UserModel = Model<IUser, {}, IUserMethods>;
 
-export const userSchema = new Schema<IUser>({
+export const userSchema = new Schema<IUser, UserModel,IUserMethods>({
     id:{
         type:String,
         required:true,
@@ -58,6 +59,13 @@ required:true
   
 });
 
-const User = model<IUser>("User", userSchema);
+
+userSchema.method('fullName', function fullName() {
+    return this.name.firstName + ' ' + this.name.lastName;
+  });
+
+const User = model<IUser, UserModel>("User", userSchema);
 
 export default User;
+
+// instance methods --> instace er method
